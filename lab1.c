@@ -31,13 +31,19 @@ int NewIndex(int** a, int n, int i, int j) {
     int index = 0;
     for (int row = 0; row < i; row++) {
         for (int col = 0; col < n; col++) {
-            if (a[row][col] != 0)
-                index++;
+            // Проверяем по четности/нечетности строки
+            if ((row < col && row % 2 == 0) || (row > col && row % 2 == 1)) {
+                continue; // Пропускаем фоновые элементы
+            }
+            index++; // Увеличиваем индекс для всех остальных элементов
         }
     }
     for (int col = 0; col < j; col++) {
-        if (a[i][col] != 0)
-            index++;
+        // Проверяем по четности/нечетности строки
+        if ((i < col && i % 2 == 0) || (i > col && i % 2 == 1)) {
+            continue; // Пропускаем фоновые элементы
+        }
+        index++; // Увеличиваем индекс для всех остальных элементов
     }
     return index;
 }
@@ -47,7 +53,7 @@ void get_val(int* arr, int size, int n, int** a) {
     printf("\nВведите i,j :\n");
     scanf("%d %d", &i1, &j1);
     if (i1 >= n || j1 >= n) {
-        printf("Выход за пределы размера матрицы");
+        printf("Выход за пределы размера матрицы\n");
     } else {
         int ind = NewIndex(a, n, i1, j1);
         if (a[i1][j1] == 0)
@@ -62,8 +68,13 @@ void set_val(int** a, int* arr, int size, int n) {
     printf("Введите i,j : ");
     scanf("%d %d", &i1, &j1);
     if (i1 >= n || j1 >= n) {
-        printf("Выход за пределы размера матрицы");
+        printf("Выход за пределы размера матрицы\n");
     } else {
+        // Проверка на фоновый элемент по четности/нечетности строки
+        if ((i1 < j1 && i1 % 2 == 0) || (i1 > j1 && i1 % 2 == 1)) {
+            printf("Невозможно изменить фоновый элемент (нулевое значение)!\n");
+            return; // Не изменяем фоновый элемент
+        }
         int ind = NewIndex(a, n, i1, j1);
         printf("Введите новое значение  : ");
         int val;
@@ -82,6 +93,20 @@ void set_val(int** a, int* arr, int size, int n) {
     }
 }
 
+void initialize_matrix(int** a, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i < j && i % 2 == 0) { // Четные строки выше диагонали
+                a[i][j] = 0;
+            } else if (i > j && i % 2 == 1) { // Нечетные строки ниже диагонали
+                a[i][j] = 0;
+            } else { // Заполнение случайными элементами
+                a[i][j] = rand() % 10 + 1;
+            }
+        }
+    }
+}
+
 int main() {
     setlocale(LC_ALL, "Rus");
 
@@ -94,17 +119,7 @@ int main() {
         a[i] = (int*)malloc(n * sizeof(int));
 
     // Инициализируем матрицу
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            if (i < j && i % 2 == 0) { // Четные строки выше диагонали
-                a[i][j] = 0;
-            } else if (i > j && i % 2 == 1) { // Нечетные строки ниже диагонали
-                a[i][j] = 0;
-            } else { // Заполнение случайными элементами
-                a[i][j] = rand() % 10 + 1;
-            }
-        }
-    }
+    initialize_matrix(a, n);
 
     printf("Исходная матрица :\n");
     for (i = 0; i < n; i++) {
@@ -140,4 +155,4 @@ int main() {
     free(a);
 
     return 0;
-}
+}\
