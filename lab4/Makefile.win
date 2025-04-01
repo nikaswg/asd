@@ -1,0 +1,31 @@
+# Project: lab4
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = main.o family_data.o
+LINKOBJ  = main.o family_data.o
+LIBS     = -L"D:/Google/Dev-Cpp/MinGW64/lib" -L"D:/Google/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
+INCS     = -I"D:/Google/Dev-Cpp/MinGW64/include" -I"D:/Google/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Google/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"D:/Google/Dev-Cpp/MinGW64/include" -I"D:/Google/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Google/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"D:/Google/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
+BIN      = lab4.exe
+CXXFLAGS = $(CXXINCS) 
+CFLAGS   = $(INCS) 
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
+
+family_data.o: family_data.c
+	$(CC) -c family_data.c -o family_data.o $(CFLAGS)
