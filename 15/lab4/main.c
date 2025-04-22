@@ -1,96 +1,112 @@
 #include "family_data.h"
 
-// Функция для отображения меню
+// Функция отображения меню
 void display_menu() {
-    printf("\nMenu:\n"); // Меню на английском
+    printf("\nMenu:\n");
     printf("1. Load family data from file\n");
     printf("2. Display family list\n");
     printf("3. Add new family member\n");
-    printf("4. Sort by number of siblings\n");
-    printf("5. Sort by length of faculty\n");
-    printf("6. Save family data to file\n");
-    printf("7. Exit\n");
+    printf("4. Edit family member\n");
+    printf("5. Delete family member\n");
+    printf("6. Sort by number of siblings\n");
+    printf("7. Sort by length of faculty\n");
+    printf("8. Save family data to file\n");
+    printf("9. Exit\n");
 }
 
-// Функция для интерактивного добавления нового члена семьи
+// Функция для добавления члена семьи с вводом с клавиатуры
 void add_family_interactive(Family **head) {
     char surname[50], name[50], patronymic[50], faculty[50];
     char father_specialty[50], mother_specialty[50];
     int siblings_count;
 
-    // Запрашиваем данные о новом члене семьи
-    printf("Enter surname: "); // Запрос фамилии на английском
+    printf("Enter surname: ");
     scanf("%s", surname);
-    printf("Enter name: "); // Запрос имени на английском
+    printf("Enter name: ");
     scanf("%s", name);
-    printf("Enter patronymic: "); // Запрос отчества на английском
+    printf("Enter patronymic: ");
     scanf("%s", patronymic);
-    printf("Enter faculty: "); // Запрос факультета на английском
+    printf("Enter faculty: ");
     scanf("%s", faculty);
-    printf("Enter father's specialty: "); // Запрос специальности отца на английском
+    printf("Enter father's specialty: ");
     scanf("%s", father_specialty);
-    printf("Enter mother's specialty: "); // Запрос специальности матери на английском
+    printf("Enter mother's specialty: ");
     scanf("%s", mother_specialty);
-    printf("Enter number of siblings: "); // Запрос количества братьев и сестер на английском
+    printf("Enter number of siblings: ");
     scanf("%d", &siblings_count);
 
-    // Добавляем нового члена семьи в список
     add_family(head, create_family(surname, name, patronymic, faculty, father_specialty, mother_specialty, siblings_count));
 }
 
 int main() {
-    Family *family_list = NULL; // Указатель на список семей
-    int choice; // Переменная для выбора меню
-    char filename[100]; // Имя файла для хранения данных
+    Family *family_list = NULL;
+    int choice;
+    char filename[100];
+    char surname[50], name[50];
 
-    // Основной цикл программы
     while (1) {
-        display_menu(); // Отображаем меню
-        printf("Enter your choice: "); // Запрос выбора пользователя на английском
-        scanf("%d", &choice); // Получаем выбор пользователя
+        display_menu();
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
         switch (choice) {
             case 1:
-                printf("Enter filename to load: "); // Запрос имени файла для загрузки на английском
+                printf("Enter filename to load: ");
                 scanf("%s", filename);
-                family_list = load_from_file(filename); // Загружаем данные из файла
+                family_list = load_from_file(filename);
                 if (!family_list) {
-                    printf("Error loading data.\n"); // Сообщение об ошибке на английском
+                    printf("Error loading data.\n");
                 }
                 break;
 
             case 2:
-                printf("Family List:\n"); // Заголовок списка семей на английском
-                print_family(family_list); // Показываем список семей
+                printf("Family List:\n");
+                print_family(family_list);
                 break;
 
             case 3:
-                add_family_interactive(&family_list); // Добавляем нового члена семьи
+                add_family_interactive(&family_list);
                 break;
 
             case 4:
-                sort_by_siblings(&family_list); // Сортировка по количеству братьев и сестер
-                printf("List sorted by number of siblings.\n"); // Сообщение о сортировке на английском
+                printf("Enter surname of the member to edit: ");
+                scanf("%s", surname);
+                printf("Enter name of the member to edit: ");
+                scanf("%s", name);
+                edit_family(family_list, surname, name);
                 break;
 
             case 5:
-                sort_by_faculty_length(&family_list); // Сортировка по длине факультета
-                printf("List sorted by length of faculty.\n"); // Сообщение о сортировке на английском
+                printf("Enter surname of the member to delete: ");
+                scanf("%s", surname);
+                printf("Enter name of the member to delete: ");
+                scanf("%s", name);
+                delete_family(&family_list, surname, name);
                 break;
 
             case 6:
-                printf("Enter filename to save: "); // Запрос имени файла для сохранения на английском
-                scanf("%s", filename);
-                save_to_file(family_list, filename); // Сохраняем данные в файл
-                printf("Data saved to %s.\n", filename); // Сообщение о сохранении на английском
+                sort_by_siblings(&family_list);
+                printf("List sorted by number of siblings.\n");
                 break;
 
             case 7:
-                free_list(family_list); // Освобождаем память
-                return 0; // Завершаем программу
+                sort_by_faculty_length(&family_list);
+                printf("List sorted by length of faculty.\n");
+                break;
+
+            case 8:
+                printf("Enter filename to save: ");
+                scanf("%s", filename);
+                save_to_file(family_list, filename);
+                printf("Data saved to %s.\n", filename);
+                break;
+
+            case 9:
+                free_list(family_list);
+                return 0;
 
             default:
-                printf("Invalid choice. Please try again.\n"); // Сообщение о неверном выборе на английском
+                printf("Invalid choice. Please try again.\n");
         }
     }
 }

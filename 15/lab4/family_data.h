@@ -7,14 +7,14 @@
 
 // Структура для хранения данных о семье
 typedef struct Family {
-    char surname[50];          // Фамилия
-    char name[50];             // Имя
-    char patronymic[50];      // Отчество
-    char faculty[50];         // Факультет
-    char father_specialty[50]; // Специальность отца
-    char mother_specialty[50]; // Специальность матери
-    int siblings_count;       // Количество братьев и сестер
-    struct Family *next;      // Указатель на следующий элемент списка
+    char surname[50];           // Фамилия
+    char name[50];              // Имя
+    char patronymic[50];        // Отчество
+    char faculty[50];           // Факультет
+    char father_specialty[50];  // Специальность отца
+    char mother_specialty[50];  // Специальность матери
+    int siblings_count;         // Количество братьев и сестер
+    struct Family *next;        // Указатель на следующий элемент
 } Family;
 
 // Прототипы функций
@@ -25,7 +25,9 @@ void print_family(Family *head);
 void save_to_file(Family *head, const char *filename);
 Family *load_from_file(const char *filename);
 void free_list(Family *head);
-void sort_by_siblings(Family **head); // Сортировка по количеству братьев и сестер
-void sort_by_faculty_length(Family **head); // Сортировка по длине факультета
+void sort_by_siblings(Family **head);
+void sort_by_faculty_length(Family **head);
+void delete_family(Family **head, const char *surname, const char *name);
+void edit_family(Family *head, const char *surname, const char *name);
 
 #endif

@@ -1,5 +1,4 @@
 Ivanov Ivan Ivanovich Physics Engineer Doctor 2
 Sidorov Alexey Alekseevich Biology Doctor Engineer 3
-Xusanov Oleg Vladimirovich Biology Data Analytic 5
 Petrov Petr Petrovich Chemistry Programmer Teacher 1
 Kuznetsov Oleg Olegovich Mathematics Architect Cook 0
