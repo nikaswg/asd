@@ -1,0 +1,4 @@
+Sidorov Alexey Alekseevich Biology Doctor Engineer 3
+Valov Igor Petrovich Biology Cook Cook 4
+Petrov Petr Petrovich Chemistry Programmer Teacher 1
+Kuznetsov Oleg Olegovich Mathematics Architect Cook 0
