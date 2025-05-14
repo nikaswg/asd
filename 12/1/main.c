@@ -1,0 +1,253 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <ctype.h>
+
+void clear_input_buffer() {
+    while (getchar() != '\n');
+}
+
+int get_valid_number(const char* prompt) {
+    int value;
+    char ch;
+    while (1) {
+        printf("%s", prompt);
+        if (scanf("%d", &value) != 1) {
+            printf("Ошибка: введите число!\n");
+            clear_input_buffer();
+            continue;
+        }
+        
+        // Проверяем, что после числа нет других символов кроме пробельных
+        while ((ch = getchar()) != '\n') {
+            if (!isspace(ch)) {
+                printf("Ошибка: введите только число без дополнительных символов!\n");
+                clear_input_buffer();
+                value = -1; // Помечаем как неверное значение
+                break;
+            }
+        }
+        
+        if (value <= 0) {
+            printf("Ошибка: число должно быть положительным!\n");
+        } else if (value != -1) {
+            break;
+        }
+    }
+    return value;
+}
+
+void func_newarray(int** a, int** arr, int* size, int m, int n) {
+    int i, j, k = 0;
+    *size = 0;
+
+    // Подсчет ненулевых элементов
+    for (i = 0; i < m; i++) {
+        for (j = 0; j < n; j++) {
+            if (!((i + 1) % 2 == 0 && (j + 1) % 2 == 0)) { // Четные строки и столбцы - фоновые
+                (*size)++;
+            }
+        }
+    }
+
+    // Выделяем память
+    *arr = (int*)malloc(*size * sizeof(int));
+    if (*arr == NULL) {
+        printf("Ошибка выделения памяти!\n");
+        exit(1);
+    }
+
+    // Заполняем упакованный вектор
+    k = 0;
+    for (i = 0; i < m; i++) {
+        for (j = 0; j < n; j++) {
+            if (!((i + 1) % 2 == 0 && (j + 1) % 2 == 0)) {
+                (*arr)[k++] = a[i][j];
+            }
+        }
+    }
+}
+
+int NewIndex(int m, int n, int i, int j) {
+    int index = 0;
+    for (int row = 0; row < i; row++) {
+        for (int col = 0; col < n; col++) {
+            if ((row + 1) % 2 == 0 && (col + 1) % 2 == 0) continue;
+            index++;
+        }
+    }
+    for (int col = 0; col < j; col++) {
+        if ((i + 1) % 2 == 0 && (col + 1) % 2 == 0) continue;
+        index++;
+    }
+    return index;
+}
+
+void get_val(int* arr, int size, int m, int n, int** a) {
+    int i1, j1;
+    
+    while (1) {
+        printf("\nВведите i,j (через пробел): ");
+        if (scanf("%d %d", &i1, &j1) != 2) {
+            printf("Ошибка: введите два числа через пробел!\n");
+            clear_input_buffer();
+            continue;
+        }
+        clear_input_buffer();
+        break;
+    }
+    
+    i1--; j1--;
+
+    if (i1 >= m || j1 >= n || i1 < 0 || j1 < 0) {
+        printf("Выход за пределы матрицы\n");
+        return;
+    }
+
+    if ((i1 + 1) % 2 == 0 && (j1 + 1) % 2 == 0) {
+        printf("Фоновый элемент\n");
+    } else {
+        int ind = NewIndex(m, n, i1, j1);
+        if (ind >= size) {
+            printf("Ошибка: индекс выходит за границы массива!\n");
+        } else {
+            printf("val=%d, ind=%d\n", arr[ind], ind);
+        }
+    }
+}
+
+void set_val(int** a, int* arr, int size, int m, int n) {
+    int i1, j1, val;
+    
+    while (1) {
+        printf("Введите i,j (через пробел): ");
+        if (scanf("%d %d", &i1, &j1) != 2) {
+            printf("Ошибка: введите два числа через пробел!\n");
+            clear_input_buffer();
+            continue;
+        }
+        clear_input_buffer();
+        break;
+    }
+    
+    i1--; j1--;
+
+    if (i1 >= m || j1 >= n || i1 < 0 || j1 < 0) {
+        printf("Выход за пределы матрицы\n");
+        return;
+    }
+
+    if ((i1 + 1) % 2 == 0 && (j1 + 1) % 2 == 0) {
+        printf("Невозможно изменить фоновый элемент!\n");
+        return;
+    }
+
+    int ind = NewIndex(m, n, i1, j1);
+    if (ind >= size) {
+        printf("Ошибка: индекс выходит за границы массива!\n");
+        return;
+    }
+
+    while (1) {
+        printf("Введите новое значение: ");
+        if (scanf("%d", &val) != 1) {
+            printf("Ошибка: введите число!\n");
+            clear_input_buffer();
+            continue;
+        }
+        clear_input_buffer();
+        break;
+    }
+    
+    a[i1][j1] = arr[ind] = val;
+
+    printf("\nНовый вектор:\n");
+    for (int i = 0; i < size; i++)
+        printf("%d ", arr[i]);
+    printf("\nНовая матрица:\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++)
+            printf("%d ", a[i][j]);
+        printf("\n");
+    }
+}
+
+void initialize_matrix(int** a, int m, int n) {
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if ((i + 1) % 2 == 0 && (j + 1) % 2 == 0) {
+                a[i][j] = 0;
+            } else {
+                a[i][j] = rand() % 10 + 1;
+            }
+        }
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+
+    int m, n, i, j;
+    
+    m = get_valid_number("Введите количество строк матрицы m: ");
+    n = get_valid_number("Введите количество столбцов матрицы n: ");
+
+    int** a = (int**)malloc(m * sizeof(int*));
+    for (i = 0; i < m; i++)
+        a[i] = (int*)malloc(n * sizeof(int));
+
+    initialize_matrix(a, m, n);
+
+    printf("\nИсходная матрица %dx%d:\n", m, n);
+    for (i = 0; i < m; i++) {
+        for (j = 0; j < n; j++)
+            printf("%d ", a[i][j]);
+        printf("\n");
+    }
+
+    int* arr = NULL;
+    int size = 0;
+
+    func_newarray(a, &arr, &size, m, n);
+    printf("\nУпакованный вектор (размер %d):\n", size);
+    for (i = 0; i < size; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+
+    while (1) {
+        printf("\nМеню:\n");
+        printf("1. Получить значение элемента\n");
+        printf("2. Установить значение элемента\n");
+        printf("3. Выход\n");
+        
+        int msg;
+        while (1) {
+            printf("Выберите действие (1-3): ");
+            if (scanf("%d", &msg) != 1) {
+                printf("Ошибка: введите число!\n");
+                clear_input_buffer();
+                continue;
+            }
+            clear_input_buffer();
+            if (msg < 1 || msg > 3) {
+                printf("Ошибка: введите число от 1 до 3!\n");
+                continue;
+            }
+            break;
+        }
+        
+        if (msg == 1)
+            get_val(arr, size, m, n, a);
+        else if (msg == 2)
+            set_val(a, arr, size, m, n);
+        else
+            break;
+    }
+
+    free(arr);
+    for (i = 0; i < m; i++)
+        free(a[i]);
+    free(a);
+
+    return 0;
+}
